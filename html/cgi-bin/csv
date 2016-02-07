@@ -1,0 +1,98 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+use Text::CSV;
+use DBI;
+use feature "switch";
+use enum qw/ OK=0 AUTH=14 DB=15 /;
+
+my @db_credentials = ('DBI:Pg:dbname=faffoos_test;host=faffoos.com', 'tim', 'sally664');
+
+# parse out the cookies
+# that are needed
+my @rawCookies = split /; /, $ENV{'HTTP_COOKIE'};
+my %cookies;
+foreach (@rawCookies) {
+	my ($key, $val) = split /\=/, $_;
+	$cookies{$key} = $val;
+}
+$cookies{'user'} =~ s/%40/\@/;
+
+# check identity of user
+&validate_user ($cookies{'user'}, $cookies{'token'});
+
+my $table;
+
+given ($ENV{'QUERY_STRING'}) {
+
+	when (/vehicle/) { $table = 'fleet'; }
+	when (/reservation/) { $table = 'schedule'; }
+	default {
+		print "Content-type: text/csv\nStatus: 400;\n\n";
+	}
+}
+
+# connect to faffoos.com
+my $dbd = DBI->connect (@db_credentials)
+	or die DBI->errstr;
+
+# retrieve the table
+my $sth = $dbd->prepare('
+	select * from ' . $table
+) or die $dbd->errstr;
+
+$sth->execute ();
+
+my $csv = Text::CSV->new ({binary => 1});
+$csv->eol ("\r\n");
+
+my @doc;
+
+# loop through and print each row
+while (my @line = $sth->fetchrow_array) {
+	push @doc, \@line;
+}
+
+print "Content-type: text/csv\n";
+print 'Content-Disposition: attachment; filename="download.csv' . "\n\n";
+$csv->print (*STDOUT, $_) for @doc;
+
+$sth->finish;
+$dbd->disconnect;
+
+exit;
+
+# kill the program if the user
+# is not authenticated
+sub validate_user {
+
+	# in case of failure set failure reason
+	$! = DB;
+
+        my($u, $c) = @_;
+
+        # retrieve cookie from database
+        my $dbh = DBI->connect (@db_credentials)
+                or return 0;
+        my $sth = $dbh->prepare ('
+                select cookie from users
+                where email_address = ?')
+                or return 0;
+        $sth->execute ($u)
+                or return 0;
+        my @real_cookie = $sth->fetchrow();
+
+	# test authenticity of the token
+	# and close database connection
+        unless ($real_cookie[0] eq $c && $c ne "") {
+		print "Status: 403 Forbidden\n\n";
+		exit AUTH;
+	}
+
+	# reset
+	$! = OK;
+
+	$sth->finish;
+        $dbh->disconnect;
+}

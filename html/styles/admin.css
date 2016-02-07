@@ -1,0 +1,322 @@
+html {
+    box-sizing:         border-box;
+    font-family:        Roboto;
+    font-weight:        400;
+    height:             100%;
+}
+
+body {
+    box-sizing:         border-box;
+    margin:             0;
+    border:             0;
+    padding:            0;
+    height:             100%;
+    overflow:           hidden;
+}
+
+button::-moz-focus-inner {
+    border:             0;
+}
+
+.header {
+    box-sizing:         border-box;
+    position:           fixed;
+    top:                0;
+    left:               0;
+    margin:             0;
+    border:             0;
+    padding:            .875em 1em;
+    height:             4em;
+    width:              100%;
+    background-color:   #003D4C;
+}
+
+.header-text {
+    font-family:        'Roboto Condensed';
+    font-weight:        700;
+    font-size:          175%;
+    color:              #FFFFFF;
+    float:              left;
+    margin:             0;
+    border:             0;
+    padding:            0;
+}
+
+.header-button,
+.content div button {
+    float:              right;
+    margin:             0;
+    border:             0;
+    padding:            .5em;
+    font-weight:        700;
+    font-size:          100%;
+    color:              #FFFFFF;
+    background-color:   #632451;
+    border-radius:      .25em;
+}
+
+.sidebar {
+    position:           fixed;
+    box-sizing:         border-box;
+    clear:              both;
+    top:                4em;
+    left:               0;
+    width:              10%;
+    height:             57em;
+    margin:             0;
+    border:             0;
+    padding:            0;
+    background-color:   #0094B3;
+}
+
+button {
+    font-family:        'Roboto';
+    font-weight:        700;
+}
+
+.sidebar button {
+    box-sizing:         border-box;
+    font-family:        'Roboto Condensed';
+    font-size:          125%;
+    clear:              both;
+    width:              100%;
+    height:             10%;
+    margin:             0;
+    border:             0;
+    padding:            1em;
+}
+
+.sidebar button:hover {
+    color:              #FFFFFF;
+    background-color:   #632451;
+}
+
+.sidebar button:focus {
+    outline:            none;
+    color:              #FFFFFF;
+    background-color:   #632451;
+}
+
+.selected-button {
+    color:              #FFFFFF;
+    background-color:   #632451;
+}
+
+.unselected-button {
+    color:              #FFFFFF;
+    background-color:   #0094B3;
+}
+
+.action-buttons {
+    position:           fixed;
+    bottom:             0;
+    left:               0;
+    width:              10%;
+}
+
+.action-buttons button {
+    color:              #FFFFFF;
+    background-color:   #0094B3;
+}
+
+.action-buttons button:hover {
+    color:              #FFFFFF;
+    background-color:   #003D4C;
+}
+
+.action-buttons button:focus {
+    outline:            none;
+    color:              #FFFFFF;
+    background-color:   #003D4C;
+}
+
+.content {
+    box-sizing:         border-box;
+    position:           absolute;
+    top:                4em;
+    bottom:             0;
+    right:              0;
+    width:              90%;
+    height:             auto;
+}
+
+.vehicles table {
+    margin-bottom:      5%;
+}
+
+table {
+    font-size:          .95em;
+    width:              100%;
+    height:             auto;
+    margin:             0;
+    padding:            0;
+    border-collapse:    collapse;
+    text-align:         center;
+    line-height:        1;
+    word-wrap:          break-word;
+}
+
+table th {
+    background-color:   #F2F2F2;
+}
+
+.users table td,
+.users table th,
+.reservations table td,
+.reservations table th {
+    padding:            1em 3em;
+}
+
+.vehicles table tr {
+    border-style:       solid none solid none;
+}
+
+table tr {
+    margin:             0;
+    border-style:       none none solid none;
+    border-width:       1px 0;
+    border-color:       #55554D;
+}
+
+table tr:nth-child(even) {
+    background-color:   #F2F2F2;
+}
+
+table th,
+table td {
+    padding:            1em .5em;
+}
+
+.content div {
+    width:              100%;
+    height:             100%;
+    visibility:         hidden;
+    position:           absolute;
+    top:                0;
+    left:               0;
+    overflow-y:         auto;
+}
+
+.modal-window {
+    visibility:         hidden;
+    position:           absolute;
+    top:                0;
+    left:               0;
+    z-index:            100;
+    width:              100%;
+    height:             100%;
+    background-color:   #999999;
+    background-color:   rgba(50, 50, 50, .5);
+}
+
+.add-reservations,
+.add-vehicles,
+.add-users,
+.add-locations {
+    visibility:         hidden;
+    position:           absolute;
+    left:               5%;
+    top:                7.5%;
+    width:              90%;
+    height:             85%;
+    margin:             0;
+    border:             0;
+    padding:            0;
+    border-radius:      .25em;
+    background-color:   #FFFFFF;
+}
+
+.add-vehicles,
+.add-users {
+    width:              25%;
+    left:               40%;
+}
+
+.add-reservations button {
+    margin:             0;
+    border:             0;
+    padding:            .5em;
+    font-weight:        700;
+    font-size:          100%;
+    color:              #FFFFFF;
+    background-color:   #632451;
+    border-radius:      .25em;
+}
+
+.modal-selects {
+    margin:             0;
+    padding:            1em 0;
+    width:              100%;
+    height:             10%;
+    position:           absolute;
+    top:                0;
+    left:               20%;
+}
+
+.modal-selects div {
+    float:              left;
+    margin:             0 1%;
+    border:             0;
+    padding:            0;
+    line-height:        1.5em;
+    text-align:         center;
+}
+
+.available-table {
+    position:           absolute;
+    top:                12.5%;
+    left:               0;
+    width:              100%;
+    height:             75%;
+    overflow-y:         auto;
+    overflow-x:         hidden;
+}
+
+.cancel,
+.add {
+    position:           absolute;
+    bottom:             1em;
+    margin:             0;
+    border:             0;
+    padding:            .5em;
+    font-weight:        700;
+    font-size:          100%;
+    color:              #FFFFFF;
+    background-color:   #632451;
+    border-radius:      .25em;
+}
+
+.cancel {
+    right:              1em;
+}
+
+.add {
+    left:               1em;
+}
+
+.add-vehicles,
+.add-users {
+    text-align:         left;
+}
+
+.add-vehicles label,
+.add-users label {
+    box-sizing:         border-box;
+    margin:             .1125em .125em;
+    display:            inline-block;
+    width:              40%;
+}
+
+.add-vehicles input,
+.add-vehicles select
+.add-users input {
+    box-sizing:         border-box;
+    margin:             .1125em .125em;
+    display:            inline-block;
+    width:              40%;
+}
+
+.add-users label,
+.add-users input {
+    margin: .25em
+}

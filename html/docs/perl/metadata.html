@@ -1,0 +1,92 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title></title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+
+
+<ul id="index">
+  <li><a href="#AUXILIARY">AUXILIARY</a>
+    <ul>
+      <li><a href="#Variables">Variables</a></li>
+      <li><a href="#Subroutines">Subroutines</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="AUXILIARY">AUXILIARY</h1>
+
+<pre><code>  This script, located in /cgi-bin/metadata.cgi, facilitates the construction of static HTML dropdown lists.
+ There should be no need to make any changes, barring security concerns or database changes.</code></pre>
+
+<h2 id="Variables">Variables</h2>
+
+<pre><code>  This script only requires a few variables for credential, metadata, etc.</code></pre>
+
+<dl>
+
+<dt id="db_credentials">@db_credentials</dt>
+<dd>
+
+<pre><code>  The @db_credentials variable contains the database identifier string (see Perl&#39;s DBI module documentation),
+ username, and password. For the most part, this can be simply passed to the connection subroutine without
+ modification.</code></pre>
+
+</dd>
+<dt id="cookies">%cookies</dt>
+<dd>
+
+<pre><code>  This is a hash of a users cookies. All cookies required for authentication have been properly parsed, but
+ others may not be, as some special characters are not escaped. Be careful when extending the program
+ using this variable.</code></pre>
+
+</dd>
+<dt id="query">%query</dt>
+<dd>
+
+<pre><code>  Similarly to %cookies, this hash gets loaded up with any variables in the GET query string.</code></pre>
+
+</dd>
+</dl>
+
+<h2 id="Subroutines">Subroutines</h2>
+
+<pre><code>  This program uses subroutines to do all of it&#39;s work: verify the user, retrieve the data requested by
+ client-side AJAX calls, and generate an HTML dropdown list as XML.</code></pre>
+
+<dl>
+
+<dt id="max_capacity">&amp;max_capacity</dt>
+<dd>
+
+<pre><code>  This subroutine return a list of DISTINCT capacity column values from the database as an array.</code></pre>
+
+</dd>
+<dt id="build_table">&amp;build_table</dt>
+<dd>
+
+<pre><code>  This subroutine is different than the one in reservations.cgi, because it is written specifically for HTML
+ &lt;select /&gt; tags. As an argument it retrieves a set of data in array form, then uses that array to build an
+ XML doc, which it returns in string form.</code></pre>
+
+</dd>
+<dt id="validate">&amp;validate</dt>
+<dd>
+
+<pre><code>  This subroutine simply checks whether or not a user is logged in, and returns false if not.</code></pre>
+
+</dd>
+</dl>
+
+
+</body>
+
+</html>
+
+

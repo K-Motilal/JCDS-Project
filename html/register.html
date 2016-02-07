@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>JCDS Vehicle Planner :: Register</title>
+
+    <meta charset='UTF-8'>
+
+    <!-- Import Fonts and Styles -->
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,700'
+          rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700'
+          rel='stylesheet' type='text/css'>
+    <link href='styles/main.css'
+          rel='stylesheet' type='text/css' />
+    <link href='styles/login.css'
+          rel='stylesheet' type='text/css' />
+
+    <style>
+        div {
+            width:              25%;
+            margin:             1.5em auto .5em auto;
+            border:             0;
+            padding:            1.75em;
+            background-color:   #003D4C;
+            border-radius:      .5em;
+            text-align:         center;
+        }
+        div input {
+            width:              90%;
+            margin:             0 auto 1em auto;
+            border:             0;
+            padding:            .5em;
+            border-radius:      .2em;
+            font-size:          125%;
+            color:              #000000;
+        }
+        span {
+            font-family: Roboto;
+            font-weight: 700;
+            font-size: 1.5em;
+            color: #FFFFFF;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div>
+        <span>Email Address</span>
+        <br /><br />
+        <input type='text' id='email-address'>
+        <br />
+        <span>Password</span>
+        <br /><br />
+        <input type='text' id='password'>
+        <br />
+        <span>Confirm Password</span>
+        <br /><br />
+        <input type='text' id='confirm-password'>
+        <br />
+        <button onclick='submitUser()'>Submit</button>
+    </div>
+</body>
+
+<script type='text/ecmascript'>
+function submitUser() {
+    var email = document.getElementById('email-address').value
+    var password = document.getElementById('password').value
+    var confirm_password = document.getElementById('confirm-password').value
+
+    if (password != confirm_password) {
+        alert('Password fields must match.');
+        return;
+    }
+
+    var xmlRequest = new XMLHttpRequest();
+    xmlRequest.open('POST',
+                    '/cgi-bin/temp_user.cgi?email=' + email +
+                                           '&password=' + password,
+                    true);
+    xmlRequest.send();
+
+    xmlRequest.onreadystatechange = function() {
+        if (xmlRequest.readyState == 4) {
+            switch (xmlRequest.status) {
+                case 200:
+                    alert('Thanks for signing up! Please wait or ask an ' +
+                          'administrator to approve you. Press OK to ' +
+                          'return to the login page.');
+                    window.location.assign('https://faffoos.com/login.html');
+                    break;
+                case 400:
+                    alert('That email address is already registered.');
+                    break;
+                default:
+                    alert('Server Error: ' + xmlRequest.status);
+                    break;
+            }
+        }
+    };
+}
+</script>
+</html>

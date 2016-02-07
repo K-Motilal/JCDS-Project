@@ -1,0 +1,14 @@
+\nGET:\n
+Status: 403 Forbidden
+
+Status: 403 Forbidden
+
+\nPOST: add\n
+Status: 403 Forbidden
+
+\nPOST: add\n
+Status: 403 Forbidden
+
+\nPOST: add\n
+Status: 403 Forbidden
+

@@ -1,0 +1,151 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use Digest::SHA qw/ sha256 /;
+use Data::GUID qw/ guid_string /;
+use enum qw/ OK=0 AUTH=14 DB=15 /;
+use DBI;
+
+my @db_credentials = ('DBI:Pg:dbname=faffoos_test;host=faffoos.com', 'tim', 'sally664');
+
+# parse out the cookies
+# that are needed
+my @rawCookies = split /; /, $ENV{'HTTP_COOKIE'};
+my %cookies;
+foreach (@rawCookies) {
+        my ($key, $val) = split /\=/, $_;
+        $cookies{$key} = $val;
+}
+$cookies{'user'} =~ s/%40/\@/;
+
+# parse out POST parameters
+my %query;
+my $tmpStr;
+read STDIN, $tmpStr, $ENV{'CONTENT_LENGTH'};
+my @parts = split( /\&/, $tmpStr );
+foreach my $part (@parts) {
+	my ($name, $value) = split( /\=/, $part );
+	$query{ "$name" } = $value;
+}
+$query{'username'} =~ s/%40/\@/;
+
+if ($ENV{'QUERY_STRING'} =~ m/logout/) {
+	&validate_user ($cookies{'user'}, $cookies{'token'});
+	&logout;
+    exit 0;
+}
+
+# set the cookie, or prompt failure
+my $success = &check_success ($query{'username'}, $query{'password'});
+
+print "Content-type: text/html\n";
+print "Location: http://faffoos.com/index.html\n"; # redirect
+
+print '
+<!DOCTYPE html>
+<html>
+<head>
+<title>Login Response</title>
+</head>
+<body>
+<h1>';
+
+print (($success ? "Success" : "Failure") . '!'); print '
+
+</h1>
+</body>
+</html>
+';
+
+sub check_success {
+	my($u, $p) = @_;
+	my $ret;
+
+	# retrieve hashed password from database
+	my $dbh = DBI->connect (@db_credentials)
+		or return 0;
+	my $sth = $dbh->prepare ('
+		select password from users
+		where email_address = ?')
+		or return 0;
+	$sth->execute ($u)
+		or return 0;
+	my @real_password = $sth->fetchrow();
+
+	# make the comparison and set a session cookie
+	if($real_password[0] eq unpack ("H*", sha256($p)) ) {
+		$sth = $dbh->prepare ('
+			update users
+			set cookie = ?
+			where email_address = ?')
+			or return 0;
+		my $cook = guid_string();
+		print "Set-Cookie: user=$u\nSet-Cookie: token=$cook\n";
+		$sth->execute($cook, $u);
+		$ret = 'Success!';
+	}
+
+	$sth->finish;
+	$dbh->disconnect;
+	$ret
+}
+
+sub logout {
+
+	my $u = $cookies{'user'};
+
+	$! = DB;
+
+	my $dbh = DBI->connect (@db_credentials)
+		or die DBI->errstr;
+
+	my $sth = $dbh->prepare ('
+		update users
+		set cookie = ?
+		where email_address = ?')
+		or return 0;
+	my $cook = guid_string();
+	$sth->execute($cook, $u);
+
+	$sth->finish;
+	$dbh->disconnect;
+
+	$! = OK;
+
+	print "Status: 200\n\n";
+}
+
+# kill the program if the user
+# is not authenticated
+sub validate_user {
+
+        # in case of failure set failure reason
+        $! = DB;
+
+        my($u, $c) = @_;
+
+        # retrieve cookie from database
+        my $dbh = DBI->connect (@db_credentials)
+                or return 0;
+        my $sth = $dbh->prepare ('
+                select cookie from users
+                where email_address = ?')
+                or return 0;
+        $sth->execute ($u)
+                or return 0;
+        my @real_cookie = $sth->fetchrow();
+
+        # test authenticity of the token
+        # and close database connection
+        unless ($real_cookie[0] eq $c && $c ne "") {
+                print "Status: 403 Forbidden\n\n";
+                exit AUTH;
+        }
+
+        # reset
+        $! = OK;
+
+        $sth->finish;
+        $dbh->disconnect;
+}

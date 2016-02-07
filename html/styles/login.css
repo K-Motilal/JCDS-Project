@@ -1,0 +1,42 @@
+/** Logo styles **/
+img {
+    margin-top:         2.5%;
+    height:             40%;
+    width:              40%;
+}
+
+.logo-text {
+    font-family:        'Roboto Condensed', Sans-Serif;
+    font-weight:        700;
+    color:              #FFFFFF;
+    width:              25%;
+    margin:             0 auto;
+    border:             0;
+    padding:            0;
+    word-wrap:          break-word;
+}
+
+/** Login Form Styles **/
+form {
+    width:              25%;
+    margin:             1.5em auto .5em auto;
+    border:             0;
+    padding:            1.75em;
+    background-color:   #003D4C;
+    border-radius:      .5em;
+    text-align:         center;
+}
+
+form input {
+    width:              90%;
+    margin:             0 auto .5em auto;
+    border:             0;
+    padding:            .5em;
+    border-radius:      .2em;
+    font-size:          125%;
+    color:              #999999;
+}
+
+form input:focus {
+    color:              #000000;
+}

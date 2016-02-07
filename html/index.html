@@ -1,0 +1,109 @@
+﻿<!doctype html>
+<html lang='en-US'>
+<head>
+    <title>JCDS Vehicle Planner</title>
+
+    <!-- Set Metadata -->
+    <meta charset='UTF-8' />
+
+    <!-- Redirect if not authenticated -->
+    <script type='text/ecmascript'>
+
+    </script>
+
+    <!--Import Scripts -->
+    <script type='text/ecmascript' src='scripts/util.js'></script>
+    <script type='text/ecmascript' src='scripts/ajax.js'></script>
+
+    <!--Import Fonts and Styles -->
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,700'
+          rel='stylesheet' type='text/css' />
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700'
+          rel='stylesheet' type='text/css' />
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Mono:400'
+          rel='stylesheet' type='text/css'>
+    <link href='styles/main.css'
+          rel='stylesheet' type='text/css' />
+</head>
+<body onload='loadReservationsTable()'>
+    <header>
+        <p>Johnson County Developmental Supports</p>
+        <button onclick='logout()'>Logout</button>
+    </header>
+
+    <div class='wrapper'>
+        <div id='reservations'>
+            Loading...
+        </div>
+    </div>
+
+    <div class='add-button'>
+        <button onclick='addButtonCalls()'>
+            New Reservation
+        </button>
+    </div>
+
+    <div id='add-modal' class='modal-window'>
+        <div class='inner-modal'>
+            <div class='modal-selects'>
+                <div>
+                    <label for='capacity-select'>
+                        <b>Capacity</b>
+                    </label>
+                    <br />
+                    <select id='capacity-select' onchange='getAvailable()'>
+                    </select>
+                </div>
+                <div>
+                    <label for='start-date-select'>
+                        <b>Start Date</b>
+                    </label>
+                    <br />
+                    <select id='start-date-select' onchange='getAvailable()'>
+                    </select>
+                </div>
+                <div>
+                    <label for='start-time-select'>
+                        <b>Start Time</b>
+                    </label>
+                    <br />
+                    <select id='start-time-select' onchange='getAvailable()'>
+                    </select>
+                </div>
+                <div>
+                    <label for='end-date-select'>
+                        <b>End Date</b>
+                    </label>
+                    <br />
+                    <select id='end-date-select' onchange='getAvailable()'>
+                    </select>
+                </div>
+                <div>
+                    <label for='end-time-select'>
+                        <b>End Time</b>
+                    </label>
+                    <br />
+                    <select id='end-time-select' onchange='getAvailable()'>
+                    </select>
+                </div>
+                <div>
+                    <label for='lift-select'>
+                        <b>Lift?</b>
+                    </label>
+                    <br />
+                    <input type='checkbox' id='lift-select'
+                           onchange='getAvailable()'>
+                </div>
+            </div>
+            <div id='available' class='available-table'>
+                Loading...
+            </div>
+            <div class='cancel-button'>
+                <button onclick='toggleVisible("add-modal")'>
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

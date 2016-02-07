@@ -1,0 +1,154 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title></title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+
+
+<ul id="index">
+  <li><a href="#RESERVATIONS">RESERVATIONS</a>
+    <ul>
+      <li><a href="#Variables">Variables</a></li>
+      <li><a href="#Subroutines">Subroutines</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="RESERVATIONS">RESERVATIONS</h1>
+
+<pre><code>  This script, located in /cgi-bin/reservations.cgi, performs almost all of the program&#39;s functionality.
+ Reservations are made, searched, and deleted from this file.</code></pre>
+
+<h2 id="Variables">Variables</h2>
+
+<pre><code>  This script only requires a few variables for credential, metadata, etc.</code></pre>
+
+<dl>
+
+<dt id="db_credentials">@db_credentials</dt>
+<dd>
+
+<pre><code>  The @db_credentials variable contains the database identifier string (see Perl&#39;s DBI module documentation),
+ username, and password. For the most part, this can be simply passed to the connection subroutine without
+ modification.</code></pre>
+
+</dd>
+<dt id="cookies">%cookies</dt>
+<dd>
+
+<pre><code>  This is a hash of a users cookies. All cookies required for authentication have been properly parsed, but
+ others may not be, as some special characters are not escaped. Be careful when extending the program
+ using this variable.</code></pre>
+
+</dd>
+<dt id="query">%query</dt>
+<dd>
+
+<pre><code>  Similarly to %cookies, this hash gets loaded up with any variables in the GET or post query. Based on the
+ value stored in this variable, the body of the program either reports an error, or diverts execution to the
+ appropriate subroutine. The URL strings should contain an &#39;action&#39; parameter. The &#39;action&#39; value determines
+ the subroutine to execute, while the other parameters are passed to these subs. When &#39;?action=add&#39;, a new
+ reservation is requested. &#39;?action=delete&#39; will delete a specified reservation. A value of &#39;search&#39; will
+ return a list of available vehicles. An absent value signifies a request to list a user&#39;s current
+ reservations.</code></pre>
+
+</dd>
+</dl>
+
+<h2 id="Subroutines">Subroutines</h2>
+
+<pre><code>  This program contains a separate subroutine for each &#39;action&#39; value in the GET of POST query string.</code></pre>
+
+<dl>
+
+<dt id="load_schedule">&amp;load_schedule</dt>
+<dd>
+
+<pre><code>  This subroutine retrieves a list of reservations from the database and sends them to &amp;build_table
+ for processing. Called with: &#39;/cgi-bin/reservations.cgi&#39;</code></pre>
+
+</dd>
+<dt id="load_availability">&amp;load_availability</dt>
+<dd>
+
+<pre><code>  This subroutine retrieves a list of available vehicles based upon a user&#39;s search criteria. The query
+ string parameter &#39;capacity&#39; limits the search to available vehicles with capacity &gt;= &#39;capacity&#39;. The
+ parameter &#39;lift&#39; determines whether or not to require a lift, based upon a &#39;true&#39; or other value. The
+ parameters &#39;begin&#39; and &#39;end&#39; represent desired pick_up and drop_off times in Unix time. For example:
+
+  /cgi-bin/reservations.cgi?capacity=4&amp;begin=1234567&amp;end=7654321
+
+ would represent a query for all available vehicles between Unix times 1234567 and 7654321 with four or
+ more potential passengers. Because no value is specified for &#39;lift&#39;, all result catagories will be
+ returned, with lift-less vehicles prioritized first. Whereas:
+
+  /cgi-bin/reservations.cgi?lift=true
+
+ would represent a query for all vehicles available at request time, with any
+ capacities, and with a lift. The return value is a string XML document of the HTML &lt;table /&gt; element
+ presorted by desired priority, with least in-demand vehicles at the top.</code></pre>
+
+</dd>
+<dt id="build_table">&amp;build_table</dt>
+<dd>
+
+<pre><code> This subroutine is not requested directly, but creates HTML &lt;tables /&gt; for other subs. The inputs are
+ a list of headers for the table as an array reference, a desired text label to put in an extra column, an
+ onClick action for the button, and an array of array references containing row data. Given that the second
+ argument to the sub were &#39;_LABEL&#39;, the table would be as follows:
+
+ +-------+-------+--------+
+ |Header1|Header2|        |
+ +-------+-------+--------+
+ | Data1 | Data2 | _LABEL |
+ +-------+-------+--------+
+ | Data1 | Data2 | _LABEL |
+ +-------+-------+--------+
+
+ The button pointed to _LABEL would have an onClick attribute of the third argument. However, remember that
+ this is generating XML, so the real return value would be:
+
+ &lt;table&gt;
+ &lt;thead&gt;
+  &lt;th&gt;Data1&lt;/th&gt;
+  &lt;th&gt;Data2&lt;/th&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ ... (etc.)</code></pre>
+
+</dd>
+<dt id="delete_reservation">&amp;delete_reservation</dt>
+<dd>
+
+<pre><code> Simply deletes a reservation. The reservation is refered to by the &#39;r&#39; POST parameter, and must be owned
+ by the user.</code></pre>
+
+</dd>
+<dt id="add_reservation">&amp;add_reservation</dt>
+<dd>
+
+<pre><code> Adds a reservation.
+
+ http://.../cgi-bin/reservations?v=vehicle_id&amp;begin=pick_up&amp;end=drop_off</code></pre>
+
+</dd>
+<dt id="validate_user">&amp;validate_user</dt>
+<dd>
+
+<pre><code>  This subroutine simply checks whether or not a user is logged in, and returns false if not. </code></pre>
+
+</dd>
+</dl>
+
+
+</body>
+
+</html>
+
+

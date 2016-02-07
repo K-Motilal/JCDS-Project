@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang='en-US'>
+
+<head>
+    <meta charset='UTF-8' />
+    <title>JCDS Vehicle Planner</title>
+
+    <!-- Import Fonts and Styles -->
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,700'
+          rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700'
+          rel='stylesheet' type='text/css'>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet">
+    <link href='styles/admin.css'
+          rel='stylesheet' type='text/css'>
+
+    <!-- Import Scripts -->
+    <script src='scripts/admin.js' type='text/ecmascript'></script>
+    <script src='scripts/ajax.js' type='text/ecmascript'></script>
+    <script src='scripts/util.js' type='text/ecmascript'></script>
+
+</head>
+<body onload='loadVehiclesTableAdmin()'>
+    <header class='header'>
+        <p class='header-text'>
+            Johnson County Developmental Supports Admin Panel
+        </p>
+        <button class='header-button' onclick='logout()'>Logout</button>
+    </header>
+    <aside class='sidebar'>
+        <button class='selected-button'
+                id='vehicles-button'
+                onclick='adminToggleVisible(
+                            "vehicles",
+                            "vehicles-button");
+                        loadVehiclesTableAdmin()'>
+            Vehicles
+        </button><br />
+        <button class='unselected-button'
+                id='reservations-button'
+                onclick='adminToggleVisible(
+                            "reservations",
+                            "reservations-button");
+                        loadReservationsTableAdmin()'>
+            Reservations
+        </button><br />
+       <button class='unselected-button'
+                id='users-button'
+                onclick='adminToggleVisible(
+                            "users",
+                            "users-button");
+                        loadUsersTableAdmin()'>
+            Users
+        </button><br />
+       <div class='action-buttons'>
+            <a id='download-button' href="cgi-bin/csv?vehicles">
+                <button>
+                    Download
+                </button>
+            </a>
+            <button onclick='toggleModal()'>
+                Add
+            </button>
+        </div>
+    </aside>
+    <div class='content'>
+        <div class='reservations' id='reservations'>
+            Loading...
+        </div>
+        <div class='vehicles' id='vehicles'
+             style='visibility: visible'>
+            Loading...
+        </div>
+       <div class='users' id='users'>
+            Loading...
+        </div>
+    </div>
+    <div class='modal-window' id='modal-window'>
+        <div class='add-reservations' id='add-reservations'>
+            <div class='modal-selects'>
+                <div>
+                    <label for='user-select'>
+                        <b>User</b>
+                    </label>
+                    <br />
+                    <select id='user-select'
+                        onchange='loadAvailableTableAdmin()'>
+                    </select>
+                </div>
+                <div>
+                    <label for='capacity-select'>
+                        <b>Capacity</b>
+                    </label>
+                    <br />
+                    <select id='capacity-select'
+                        onchange='loadAvailableTableAdmin()'>
+                    </select>
+                </div>
+                <div>
+                    <label for='start-date-select'>
+                        <b>Start Date</b>
+                    </label>
+                    <br />
+                    <select id='start-date-select'
+                        onchange='loadAvailableTableAdmin()'>
+                    </select>
+                </div>
+                <div>
+                    <label for='start-time-select'>
+                        <b>Start Time</b>
+                    </label>
+                    <br />
+                    <select id='start-time-select'
+                        onchange='loadAvailableTableAdmin()'>
+                    </select>
+                </div>
+                <div>
+                    <label for='end-date-select'>
+                        <b>End Date</b>
+                    </label>
+                    <br />
+                    <select id='end-date-select'
+                        onchange='loadAvailableTableAdmin()'>
+                    </select>
+                </div>
+                <div>
+                    <label for='end-time-select'>
+                        <b>End Time</b>
+                    </label>
+                    <br />
+                    <select id='end-time-select'
+                        onchange='loadAvailableTableAdmin()'>
+                    </select>
+                </div>
+                <div>
+                    <label for='lift-select'>
+                        <b>Lift?</b>
+                    </label>
+                    <br />
+                    <input type='checkbox' id='lift-select'
+                           onchange='loadAvailableTableAdmin()'>
+                </div>
+            </div>
+            <div id='available' class='available-table'>
+                Loading...
+            </div>
+
+            <button onclick='toggleModal()' class='cancel'>Cancel</button>
+        </div>
+        <div class='add-vehicles' id='add-vehicles'>
+            <div>
+                <label for='vehicle-id'>
+                    <b>Vehicle ID</b>
+                </label>
+                <input type='number' id='vehicle-id' value='0000'>
+            </div>
+            <br />
+            <div>
+                <label for='vehicle-capacity'>
+                    <b>Capacity</b>
+                </label>
+                <input type='number' id='vehicle-capacity' value='0'>
+            </div>
+            <br />
+            <div>
+                <label for='location-select'>
+                    <b>Location</b>
+                </label>
+                <select id='location-select'></select>
+            </div>
+			<br />
+            <div>
+                <label for='vehicle-year'>
+                    <b>Model Year</b>
+                </label>
+                <input type='number' id='vehicle-year' value='1950'>
+            </div>
+			<br />
+            <div>
+                <label for='vehicle-make'>
+                    <b>Make</b>
+                </label>
+                <select id='make-select'></select>
+            </div>
+            <br />
+            <div>
+                <label for='vehicle-class'>
+                    <b>Class</b>
+                </label>
+                <select id='class-select'></select>
+            </div>
+            <br />
+            <div>
+                <label for='vehicle-description'>
+                    <b>Description</b>
+                </label>
+                <input type='text' id='vehicle-description'>
+            </div>
+			<br />
+            <div>
+                <label for='vehicle-lift'>
+                    <b>Lift</b>
+                </label>
+                <input type='checkbox' id='vehicle-lift'>
+            </div>
+			<br />
+            <div>
+                <label for='vehicle-ties'>
+                    <b>Tie Downs</b>
+                </label>
+                <input type='number' id='vehicle-ties' value='0'>
+            </div>
+			<br />
+            <div>
+                <label for='vehicle-license'>
+                    <b>License</b>
+                </label>
+                <input type='text' id='vehicle-license'>
+            </div>
+			<br />
+            <div>
+                <label for='vehicle-vin'>
+                    <b>VIN</b>
+                </label>
+                <input type='vin' id='vehicle-vin'>
+            </div>
+            <button onclick='addVehicleAdmin()' class='add'>Add</button>
+            <button onclick='toggleModal()' class='cancel'>Cancel</button>
+        </div>
+       <div class='add-users' id='add-users'>
+            <div>
+                <label for='email'>
+                    Email Address
+                </label>
+                <input type='text' id='email' autocomplete='off'
+                    value=''>
+            </div>
+            <div>
+                <label for='password'>
+                    Password (Optional)
+                </label>
+                <input type='password' id='password' autocomplete='off'
+                    value=''>
+            </div>
+            <div>
+                <label for='password-confirm'>
+                    Confirm Password
+                </label>
+                <input type='password' id='password-confirm' autocomplete='off'
+                    value=''>
+            </div>
+            <div>
+                <label for='admin-select'>
+                    Administrator
+                </label>
+                <input type='checkbox' id='admin-select' autocomplete='off'
+                    checked='false'>
+            </div>
+            <button onclick='addUserAdmin()' class='add'>Add</button>
+            <button onclick='toggleModal()' class='cancel'>Cancel</button>
+        </div>
+    </div>
+</body>
+
+</html>

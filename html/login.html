@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>JCDS Vehicle Planner :: Login</title>
+
+    <!-- Import Fonts and Styles -->
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,700'
+          rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700'
+          rel='stylesheet' type='text/css'>
+    <link href='styles/main.css'
+          rel='stylesheet' type='text/css' />
+    <link href='styles/login.css'
+          rel='stylesheet' type='text/css' />
+</head>
+<body>
+
+<div class='content'>
+    <img src='img/logo.svg' alt='Johnson County Logo' />
+    <form name='login' method='post' action='/cgi-bin/auth'>
+    <input id='username-input' type='text'
+           name='username' value='email address'>
+    <input id='password-input' type='text'
+           name='password' value='password'>
+    <div>
+    <button onclick='document.login.submit()'>
+        Login
+    </button>
+    </div>
+    </form>
+    <span style='color:#FFFFFF'>
+        Don't have an account? &nbsp<a href=register.html>Request access!</a>
+    </span>
+
+</div>
+
+<!-- Javascript to control text in login fields -->
+<script>
+var userEle = document.getElementById('username-input');
+var passEle = document.getElementById('password-input');
+
+userEle.onfocus = function() {
+    if(userEle.value === 'email address') {
+        userEle.value = '';
+        userEle.type = 'text';
+    }
+};
+
+userEle.onblur = function() {
+    if(userEle.value === '') {
+        userEle.value = 'email address';
+        userEle.type = 'text';
+    }
+};
+
+passEle.onfocus = function() {
+    if(passEle.value === 'password') {
+        passEle.value = '';
+        passEle.type = 'password';
+    }
+};
+
+passEle.onblur = function() {
+    if(passEle.value === '') {
+        passEle.value = 'password';
+        passEle.type = 'text';
+    }
+};
+</script>
+
+</body>
+</html>
